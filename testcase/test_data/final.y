@@ -8,6 +8,12 @@
     int ival;
     char* strval;
 }
+
+%token  printnum printbool add sub mul div mod big small equ and or not def if fun 
+%token <strval> ID
+%token <ival> NUMBER BOOL
+
+
 %%
 //grammar section
 

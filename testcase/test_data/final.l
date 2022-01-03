@@ -8,14 +8,16 @@ letter	[a-z]
 number	0|[1-9]{digit}*|-[1-9]{digit}*
 id	{letter}({letter}|{digit}|-)*
 %%
-"print-num"	{return PRINTNUM;}
-"print-bool"	{return PRINTBOOL;}
+"print-num"	{return print-num;}
+"print-bool"	{return print-bool;}
 "#t"|"#f"	{   
-			if(strcmp(yytext,"#t")==0)
-				yylval.boolval=1;
-			else
-				yylval.boolval=0;
-			return BOOL;}
+			if(yytext == "#t"){
+				yylval.ilval=1;
+            }
+			else{
+				yylval.ilval=0;
+            }
+			return bool;}
 {number} {yylval.ival=atoi(yytext); return NUMBER;}
 "+"	     {return add;}
 "-"	     {return sub;}
