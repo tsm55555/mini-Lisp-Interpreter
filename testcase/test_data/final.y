@@ -9,10 +9,11 @@
     char* strval;
 }
 
-%token  printnum printbool add sub mul div mod big small equ and or not def if fun 
+%token  printnum printbool '+' '-' '*' '/' mod '>' '<' '=' and or not def if fun 
 %token <strval> ID
-%token <ival> NUMBER BOOL
-%type STMTS STMT EXP DEFSTMT PRINTSTMT
+%token <ival> number bool
+%type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP FUNEXP FUNCALL IFEXP
+%type<ival> VARIABLE
 
 %%
 //grammar section
@@ -25,11 +26,29 @@ STMTS: STMT STMTS
 STMT: EXP 
     | DEFSTMT 
     | PRINTSTMT
+    ;
 
 PRINTSTMT: printnum EXP
          | printbool EXP
+         ;
+EXP: bool 
+    | number 
+    | VARIABLE 
+    | NUMOP 
+    | LOGICALOP
+    | FUNEXP 
+    | FUNCALL 
+    | IFEXP
+    ;
 
-EXP: 
+NUMOP: PLUS 
+     | MINUS 
+     | MULTIPLY 
+     | DIVIDE 
+     | MODULUS 
+     | GREATER
+     | SMALLER 
+     | EQUAL
 %%
     
 void yyerror(const char* message) {

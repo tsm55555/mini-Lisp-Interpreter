@@ -19,14 +19,14 @@ id	{letter}({letter}|{digit}|-)*
             }
 			return bool;}
 {number} {yylval.ival=atoi(yytext); return NUMBER;}
-"+"	     {return add;}
-"-"	     {return sub;}
-"*"	     {return mul;}
-"/"	     {return div;}
+"+"	     {return '+';}
+"-"	     {return '-';}
+"*"	     {return '*';}
+"/"	     {return '/';}
 "mod"    {return mod;}
-">"	     {return big;}
-"<"	     {return small;}
-"="	     {return equ;}
+">"	     {return '>';}
+"<"	     {return '<';}
+"="	     {return '=';}
 "and"	 {return and;}
 "or"	 {return or;}
 "not"	 {return not;}
