@@ -1,6 +1,6 @@
 %option noyywrap
 %{
-#include "y.tab.h"
+#include "final.tab.h"
 #include <stdio.h>
 %}
 digit	[0-9]

@@ -16,7 +16,7 @@
 
 %%
 //grammar section
-
+PROGRAM: STMT
 %%
     
 void yyerror(const char* message) {
