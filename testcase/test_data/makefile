@@ -14,6 +14,11 @@ $(LEX): $(YACC)
 
 $(EXEC): $(LEX) $(YACC)
 	gcc -o final final.tab.o final.yy.o -ll
+	rm final.tab.c
+	rm final.tab.h
+	rm final.tab.o
+	rm final.yy.c
+	rm final.yy.o
 
 
 clean:

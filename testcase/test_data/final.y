@@ -16,15 +16,15 @@ void yyerror(const char* message);
 %token <ival> number bool
 %type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUN_EXP FUN_CALL IF_EXP
 %type<ival> FUN_IDs FUN_BODY IDs FUN_NAME TEST_EXP THAN_EXP ELSE_EXP 
-%type<ival> VARIABLE
+%type<ival> VARIABLE EXPs EXPs_P EXPs_M PLUS MINUS MULTIPLY DIVIDE MODULUS
 
 %%
 //grammar section
-PROGRAM: STMTS {printf("hello 1");}
+PROGRAM: STMTS {}
        ;
 
-STMTS: STMT STMTS {printf("hello 2");}
-     | STMT {printf("hello 3");}
+STMTS: STMT STMTS {}
+     | STMT {}
      ;
 
 
@@ -33,21 +33,22 @@ STMT: EXP {}
     | PRINTSTMT {}
     ;
 
-PRINTSTMT: printnum  EXP { printf("hello");}
-         | printbool EXP {}
+PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); }
+         | '(' printbool EXP ')' { printf("%d\n", $3); }
          
 
-EXPs: EXP EXPs {}
-    | EXP
-    
-EXP:  bool {}
-    | number {}
+EXPs: EXP EXPs { $$ = $2;}
+    | EXP { $$ = $1;}
+
+
+EXP:  bool { $$ = $1; }
+    | number { $$ = $1; }
     | VARIABLE {}
-    | NUMOP {}
-    | LOGICALOP {}
-    | FUN_EXP {}
-    | FUN_CALL {}
-    | IF_EXP {}
+    | NUMOP { $$ = $1; }
+    | LOGICALOP { $$ = $1; }
+    | FUN_EXP { $$ = $1; }
+    | FUN_CALL { $$ = $1; }
+    | IF_EXP { $$ = $1; }
     ;
 
 NUMOP: PLUS {}
@@ -59,11 +60,17 @@ NUMOP: PLUS {}
      | SMALLER {}
      | EQUAL {}
 
-PLUS:     '(' '+' EXP EXPs ')' {}
-MINUS:    '(' '-' EXP EXPs ')' {}
-MULTIPLY: '(' '*' EXP EXPs ')' {}
-DIVIDE:   '(' '/' EXP EXPs ')' {}
-MODULUS:  '(' mod EXP EXPs ')' {}
+PLUS:     '(' '+' EXP EXPs_P ')' { $$ = $3 + $4; }
+MINUS:    '(' '-' EXP EXPs ')' { $$ = $3 - $4; }
+EXPs_P: EXP EXPs { $$ = $1 + $2;}
+    | EXP { $$ = $1;}
+
+MULTIPLY: '(' '*' EXP EXPs_M ')' { $$ = $3 * $4; }
+DIVIDE:   '(' '/' EXP EXPs ')' { $$ = $3 / $4; }
+EXPs_M: EXP EXPs { $$ = $1 * $2;}
+    | EXP { $$ = $1;}
+
+MODULUS:  '(' mod EXP EXP ')' { $$ = $3 % $4; }
 GREATER:  '(' '>' EXP EXPs ')' {}
 SMALLER:  '(' '<' EXP EXPs ')' {}
 EQUAL:    '(' '=' EXP EXPs ')' {}
@@ -73,11 +80,11 @@ LOGICALOP: ANDOP {}
         |  NOTOP {}
 
 ANDOP: '(' and EXP EXPs ')' {}
-     ;
+     
 OROP:  '(' or  EXP EXPs ')' {}
-    ;
+    
 NOTOP: '(' not EXP ')' {}
-     ;
+     
 DEFSTMT: '(' def VARIABLE EXP ')' {}
        ;
 

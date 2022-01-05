@@ -34,7 +34,7 @@ id	{letter}({letter}|{digit}|-)*
 				yylval.ival=0;
             }
 			return bool;}
-{number} {return number;}
+{number} {yylval.ival = atoi(yytext); return number;}
 "("|")"	 {return yytext[0];}
 \t {}
 \n {}
