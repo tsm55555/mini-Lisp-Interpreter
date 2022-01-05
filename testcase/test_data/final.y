@@ -4,7 +4,6 @@
 #include <string.h>
 int yylex();
 void yyerror(const char* message);
-//tests
 %}
 %union {
     int ival;
@@ -128,4 +127,3 @@ int main(int argc, char *argv[]) {
         yyparse();
         return(0);
 }
-
