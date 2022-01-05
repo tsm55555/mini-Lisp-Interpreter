@@ -6,19 +6,11 @@
 digit	[0-9]
 letter	[a-z]
 number	0|[1-9]{digit}*|-[1-9]{digit}*
+bool    "#t"|"#f"
 id	{letter}({letter}|{digit}|-)*
 %%
 "print-num"	{return print-num;}
 "print-bool"	{return print-bool;}
-"#t"|"#f"	{   
-			if(yytext == "#t"){
-				yylval.ilval=1;
-            }
-			else{
-				yylval.ilval=0;
-            }
-			return bool;}
-{number} {yylval.ival=atoi(yytext); return NUMBER;}
 "+"	     {return '+';}
 "-"	     {return '-';}
 "*"	     {return '*';}
@@ -34,6 +26,15 @@ id	{letter}({letter}|{digit}|-)*
 "fun"	 {return fun;}
 "if"	 {return if;}
 {id}	 {yylval.strval=strdup(yytext); return ID;}
+{bool}    	{   
+			if(yytext == "#t"){
+				yylval.ilval=1;
+            }
+			else{
+				yylval.ilval=0;
+            }
+			return bool;}
+{number} {yylval.ival=atoi(yytext); return NUMBER;}
 "("|")"	 {return yytext[0];}
 .|\n	 {}
 %%
