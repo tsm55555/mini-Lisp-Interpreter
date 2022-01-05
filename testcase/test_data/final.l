@@ -9,8 +9,8 @@ number	0|[1-9]{digit}*|-[1-9]{digit}*
 bool    "#t"|"#f"
 id	{letter}({letter}|{digit}|-)*
 %%
-"print-num"	{return print-num;}
-"print-bool"	{return print-bool;}
+"print-num"	{return printnum;}
+"print-bool"	{return printbool;}
 "+"	     {return '+';}
 "-"	     {return '-';}
 "*"	     {return '*';}
@@ -24,17 +24,20 @@ id	{letter}({letter}|{digit}|-)*
 "not"	 {return not;}
 "define" {return def;}
 "fun"	 {return fun;}
-"if"	 {return if;}
-{id}	 {yylval.strval=strdup(yytext); return ID;}
+"if"	 {return IF;}
+{id}	 {return ID;}
 {bool}    	{   
-			if(yytext == "#t"){
-				yylval.ilval=1;
+			if(strcmp( yytext, "#t") == 0){
+				yylval.ival=1;
             }
 			else{
-				yylval.ilval=0;
+				yylval.ival=0;
             }
 			return bool;}
-{number} {yylval.ival=atoi(yytext); return NUMBER;}
+{number} {return number;}
 "("|")"	 {return yytext[0];}
+\t {}
+\n {}
+\r {}
 .|\n	 {}
 %%

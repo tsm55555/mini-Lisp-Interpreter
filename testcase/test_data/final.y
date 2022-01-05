@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+int yylex();
+void yyerror(const char* message);
 //tests
 %}
 %union {
@@ -9,7 +11,7 @@
     char* strval;
 }
 
-%token  printnum printbool '+' '-' '*' '/' mod '>' '<' '=' and or not def if fun 
+%token  printnum printbool '+' '-' '*' '/' mod '>' '<' '=' and or not def IF fun 
 %token <strval> ID
 %token <ival> number bool
 %type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUN_EXP FUN_CALL IF_EXP
@@ -18,21 +20,26 @@
 
 %%
 //grammar section
-PROGRAM: STMTS {}
+PROGRAM: STMTS {printf("hello 1");}
        ;
 
-STMTS: STMT STMTS {}
+STMTS: STMT STMTS {printf("hello 2");}
+     | STMT {printf("hello 3");}
      ;
 
 
 STMT: EXP {}
     | DEFSTMT {}
     | PRINTSTMT {}
+    ;
 
-PRINTSTMT: printnum  EXP {}
+PRINTSTMT: printnum  EXP { printf("hello");}
          | printbool EXP {}
-         ;
+         
 
+EXPs: EXP EXPs {}
+    | EXP
+    
 EXP:  bool {}
     | number {}
     | VARIABLE {}
@@ -51,48 +58,67 @@ NUMOP: PLUS {}
      | GREATER {}
      | SMALLER {}
      | EQUAL {}
-     ;
 
-PLUS:     '(' '+' EXP EXP ')' {}
-MINUS:    '(' '-' EXP EXP ')' {}
-MULTIPLY: '(' '*' EXP EXP ')' {}
-DIVIDE:   '(' '/' EXP EXP ')' {}
-MODULUS:  '(' mod EXP EXP ')' {}
-GREATER:  '(' '>' EXP EXP ')' {}
-SMALLER:  '(' '<' EXP EXP ')' {}
-EQUAL:    '(' '=' EXP EXP ')' {}
+PLUS:     '(' '+' EXP EXPs ')' {}
+MINUS:    '(' '-' EXP EXPs ')' {}
+MULTIPLY: '(' '*' EXP EXPs ')' {}
+DIVIDE:   '(' '/' EXP EXPs ')' {}
+MODULUS:  '(' mod EXP EXPs ')' {}
+GREATER:  '(' '>' EXP EXPs ')' {}
+SMALLER:  '(' '<' EXP EXPs ')' {}
+EQUAL:    '(' '=' EXP EXPs ')' {}
 
 LOGICALOP: ANDOP {}
         |  OROP {}
         |  NOTOP {}
-        ;
 
-ANDOP: '(' and EXP EXP ')' {}
-OROP:  '(' or  EXP EXP ')' {}
-NOTOP: '(' not EXP EXP ')' {}
-
+ANDOP: '(' and EXP EXPs ')' {}
+     ;
+OROP:  '(' or  EXP EXPs ')' {}
+    ;
+NOTOP: '(' not EXP ')' {}
+     ;
 DEFSTMT: '(' def VARIABLE EXP ')' {}
+       ;
 
-VARIABLE: ID {}
-
+VARIABLE: ID { $$ = $1; }
+        
 FUN_EXP: '(' fun FUN_IDs FUN_BODY ')' {}
+       
 
-FUN_IDs: IDs {}
-IDs: IDs VARIABLE {}
+FUN_IDs: '(' IDs ')' {}
+
+IDs: ID IDs {}
+   |
+   ;
+
 FUN_BODY: EXP {}
+        ;
 FUN_CALL: '(' FUN_EXP PARAMETERS ')' {}
         | '(' FUN_NAME PARAMETERS ')' {}
         ;
+        
 PARAMETERS: EXP {}
+          ;
 FUN_NAME: ID {}
+        ;
 
-IF_EXP: '(' if TEST_EXP THAN_EXP ELSE_EXP ')' {}
-TEST_EXP: EXP {}
-THAN_EXP: EXP {}
-ELSE_EXP: EXP {}
+IF_EXP: '(' IF TEST_EXP THAN_EXP ELSE_EXP ')' {}
+      ;
+TEST_EXP: EXP { $$ = $1 ;}
+        ;
+THAN_EXP: EXP { $$ = $1 ;}
+        ;
+ELSE_EXP: EXP { $$ = $1 ;}
+        ;
 %%
     
 void yyerror(const char* message) {
     printf("syntax error\n");
-};
+}
+
+int main(int argc, char *argv[]) {
+        yyparse();
+        return(0);
+}
 

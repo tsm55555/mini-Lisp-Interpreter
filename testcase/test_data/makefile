@@ -1,6 +1,6 @@
 YACC:=final.tab.o
 LEX:=final.yy.o
-EXEC:=2
+EXEC:=final
 
 all: $(EXEC)
 
@@ -13,7 +13,7 @@ $(LEX): $(YACC)
 	gcc -c -g -I .. final.yy.c
 
 $(EXEC): $(LEX) $(YACC)
-	gcc -o 2 final.tab.o final.yy.o -ll
+	gcc -o final final.tab.o final.yy.o -ll
 
 
 clean:
