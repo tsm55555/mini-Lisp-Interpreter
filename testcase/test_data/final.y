@@ -12,7 +12,7 @@
 %token  printnum printbool '+' '-' '*' '/' mod '>' '<' '=' and or not def if fun 
 %token <strval> ID
 %token <ival> number bool
-%type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP FUNEXP FUNCALL IFEXP
+%type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUNEXP FUNCALL IFEXP
 %type<ival> VARIABLE
 
 %%
@@ -49,6 +49,22 @@ NUMOP: PLUS
      | GREATER
      | SMALLER 
      | EQUAL
+
+PLUS:     '(' '+' EXP EXP ')'
+MINUS:    '(' '-' EXP EXP ')'
+MULTIPLY: '(' '*' EXP EXP ')'
+DIVIDE:   '(' '/' EXP EXP ')'
+MODULUS:  '(' mod EXP EXP ')'
+GREATER:  '(' '>' EXP EXP ')'
+SMALLER:  '(' '<' EXP EXP ')'
+EQUAL:    '(' '=' EXP EXP ')'
+
+LOGICALOP: ANDOP 
+        |  OROP 
+        |  NOTOP
+ANDOP: '(' and EXP EXP ')'
+OROP:  '(' or  EXP EXP ')'
+NOTOP: '(' not EXP EXP ')'
 %%
     
 void yyerror(const char* message) {
