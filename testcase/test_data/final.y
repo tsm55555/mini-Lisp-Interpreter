@@ -10,12 +10,12 @@ void yyerror(const char* message);
     char* strval;
 }
 
-%token  printnum printbool '+' '-' '*' '/' mod '>' '<' '=' and or not def IF fun 
+%token  printnum printbool '+' '-' '*' '/' '>' '<' '=' mod and or not def IF fun 
 %token <strval> ID
 %token <ival> number bool
 %type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUN_EXP FUN_CALL IF_EXP
 %type<ival> FUN_IDs FUN_BODY IDs FUN_NAME TEST_EXP THAN_EXP ELSE_EXP 
-%type<ival>  EXPs EXPs_P EXPs_M PLUS MINUS MULTIPLY DIVIDE MODULUS
+%type<ival>  EXPs EXPs_P EXPs_M PLUS MINUS MULTIPLY DIVIDE MODULUS GREATER SMALLER EQUAL
 %type<strval> VARIABLE
 %%
 //grammar section
@@ -43,8 +43,8 @@ PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); }
                                  }   
          
 
-EXPs: EXP EXPs { $$ = $2;}
-    | EXP { $$ = $1;}
+EXPs: EXP EXPs { $$ = $2; }
+    | EXP { $$ = $1; }
 
 
 EXP:  bool { $$ = $1; }
@@ -72,14 +72,35 @@ MULTIPLY: '(' '*' EXP EXPs_M ')' { $$ = $3 * $4; }
 DIVIDE:   '(' '/' EXP EXPs ')' { $$ = $3 / $4; }
 
 EXPs_P: EXP EXPs_P { $$ = $1 + $2;}
-    | EXP { $$ = $1;}
-EXPs_M: EXP EXPs { $$ = $1 * $2;}
-    | EXP { $$ = $1;}
+      | EXP { $$ = $1;}
+EXPs_M: EXP EXPs_M { $$ = $1 * $2;}
+      | EXP { $$ = $1;}
 
 MODULUS:  '(' mod EXP EXP ')' { $$ = $3 % $4; }
-GREATER:  '(' '>' EXP EXPs ')' {}
-SMALLER:  '(' '<' EXP EXPs ')' {}
-EQUAL:    '(' '=' EXP EXPs ')' {}
+GREATER:  '(' '>' EXP EXPs ')' { 
+                                    if($3 > $4){
+                                        $$ = 1; 
+                                    }
+                                    else{
+                                        $$ = 0;
+                                    }
+                               }
+SMALLER:  '(' '<' EXP EXPs ')' {
+                                    if($3 < $4){
+                                        $$ = 1;
+                                    }
+                                    else{
+                                        $$ = 0;
+                                    }
+                               }
+EQUAL:    '(' '=' EXP EXPs ')' {
+                                    if($3 == $4){
+                                        $$ = 1;
+                                    }
+                                    else{
+                                        $$ = 0;
+                                    }
+                               }
 
 LOGICALOP: ANDOP {}
         |  OROP {}
