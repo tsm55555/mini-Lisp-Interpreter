@@ -33,7 +33,14 @@ STMT: EXP {}
     ;
 
 PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); }
-         | '(' printbool EXP ')' { printf("%d\n", $3); }
+         | '(' printbool EXP ')' { 
+                                     if($3){
+                                        printf("#t\n"); 
+                                     }
+                                     else {
+                                        printf("#f\n");     
+                                     }
+                                 }   
          
 
 EXPs: EXP EXPs { $$ = $2;}
@@ -61,11 +68,11 @@ NUMOP: PLUS {}
 
 PLUS:     '(' '+' EXP EXPs_P ')' { $$ = $3 + $4; }
 MINUS:    '(' '-' EXP EXPs ')' { $$ = $3 - $4; }
-EXPs_P: EXP EXPs { $$ = $1 + $2;}
-    | EXP { $$ = $1;}
-
 MULTIPLY: '(' '*' EXP EXPs_M ')' { $$ = $3 * $4; }
 DIVIDE:   '(' '/' EXP EXPs ')' { $$ = $3 / $4; }
+
+EXPs_P: EXP EXPs { $$ = $1 + $2;}
+    | EXP { $$ = $1;}
 EXPs_M: EXP EXPs { $$ = $1 * $2;}
     | EXP { $$ = $1;}
 
