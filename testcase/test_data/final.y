@@ -4,6 +4,7 @@
 #include <string.h>
 int yylex();
 void yyerror(const char* message);
+int not_equal = 0;
 %}
 %union {
     int ival;
@@ -15,8 +16,8 @@ void yyerror(const char* message);
 %token <ival> number bool
 %type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUN_EXP FUN_CALL IF_EXP
 %type<ival> FUN_IDs FUN_BODY IDs FUN_NAME TEST_EXP THAN_EXP ELSE_EXP 
-%type<ival>  EXPs EXPs_P EXPs_M PLUS MINUS MULTIPLY DIVIDE MODULUS GREATER SMALLER EQUAL
-%type<strval> VARIABLE
+%type<ival>  EXPs EXPs_P EXPs_M EXPs_E PLUS MINUS MULTIPLY DIVIDE MODULUS GREATER SMALLER EQUAL
+%type<strval> VARIABLE 
 %%
 //grammar section
 PROGRAM: STMTS {}
@@ -76,8 +77,8 @@ EXPs_P: EXP EXPs_P { $$ = $1 + $2;}
 EXPs_M: EXP EXPs_M { $$ = $1 * $2;}
       | EXP { $$ = $1;}
 
-MODULUS:  '(' mod EXP EXP ')' { $$ = $3 % $4; }
-GREATER:  '(' '>' EXP EXPs ')' { 
+MODULUS:  '(' mod EXP EXP ')'  { $$ = $3 % $4; }
+GREATER:  '(' '>' EXP EXP ')' { 
                                     if($3 > $4){
                                         $$ = 1; 
                                     }
@@ -85,7 +86,7 @@ GREATER:  '(' '>' EXP EXPs ')' {
                                         $$ = 0;
                                     }
                                }
-SMALLER:  '(' '<' EXP EXPs ')' {
+SMALLER:  '(' '<' EXP EXP ')' {
                                     if($3 < $4){
                                         $$ = 1;
                                     }
@@ -93,15 +94,27 @@ SMALLER:  '(' '<' EXP EXPs ')' {
                                         $$ = 0;
                                     }
                                }
-EQUAL:    '(' '=' EXP EXPs ')' {
-                                    if($3 == $4){
+EQUAL:    '(' '=' EXP EXPs_E ')' {
+                                    if(not_equal){
+                                        $$ = 0;
+                                        not_equal = 0;
+                                    }
+                                    else if($3 == $4){
                                         $$ = 1;
                                     }
                                     else{
                                         $$ = 0;
                                     }
                                }
-
+EXPs_E: EXP EXPs_M { 
+                        if($1 == $2){
+                            $$ = $1;
+                        }
+                        else{
+                            not_equal  = 1;
+                        } 
+                   }
+      | EXP { $$ = $1; }
 LOGICALOP: ANDOP {}
         |  OROP {}
         |  NOTOP {}
