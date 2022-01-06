@@ -3,8 +3,8 @@
 
 ## Feature
 ### Basic
-- [ ] Syntax Validation
-- [ ] Print
+- [X] Syntax Validation
+- [X] Print
 - [ ] Numerical Operations
 - [ ] Logical Operators
 - [ ] Variable Defination
