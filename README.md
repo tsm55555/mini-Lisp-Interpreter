@@ -5,7 +5,7 @@
 ### Basic
 - [X] Syntax Validation
 - [X] Print
-- [ ] Numerical Operations
+- [X] Numerical Operations
 - [ ] Logical Operators
 - [ ] Variable Defination
 - [ ] Function
