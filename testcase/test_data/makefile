@@ -22,9 +22,4 @@ $(EXEC): $(LEX) $(YACC)
 
 
 clean:
-	rm final.tab.c
-	rm final.tab.h
-	rm final.tab.o
-	rm final.yy.c
-	rm final.yy.o
 	rm final

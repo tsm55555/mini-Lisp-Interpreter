@@ -15,8 +15,8 @@ void yyerror(const char* message);
 %token <ival> number bool
 %type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUN_EXP FUN_CALL IF_EXP
 %type<ival> FUN_IDs FUN_BODY IDs FUN_NAME TEST_EXP THAN_EXP ELSE_EXP 
-%type<ival> VARIABLE EXPs EXPs_P EXPs_M PLUS MINUS MULTIPLY DIVIDE MODULUS
-
+%type<ival>  EXPs EXPs_P EXPs_M PLUS MINUS MULTIPLY DIVIDE MODULUS
+%type<strval> VARIABLE
 %%
 //grammar section
 PROGRAM: STMTS {}
