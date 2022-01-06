@@ -71,7 +71,7 @@ MINUS:    '(' '-' EXP EXPs ')' { $$ = $3 - $4; }
 MULTIPLY: '(' '*' EXP EXPs_M ')' { $$ = $3 * $4; }
 DIVIDE:   '(' '/' EXP EXPs ')' { $$ = $3 / $4; }
 
-EXPs_P: EXP EXPs { $$ = $1 + $2;}
+EXPs_P: EXP EXPs_P { $$ = $1 + $2;}
     | EXP { $$ = $1;}
 EXPs_M: EXP EXPs { $$ = $1 * $2;}
     | EXP { $$ = $1;}
