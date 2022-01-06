@@ -9,6 +9,13 @@ int not_equal = 0;
 %union {
     int ival;
     char* strval;
+    struct op{
+        int val;
+        int add_op;
+        int mul_op;
+        int and_op;
+        int or_op;
+    }op;    
 }
 
 %token  printnum printbool '+' '-' '*' '/' '>' '<' '=' mod and or not def IF fun 
@@ -16,8 +23,9 @@ int not_equal = 0;
 %token <ival> number bool
 %type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUN_EXP FUN_CALL IF_EXP
 %type<ival> FUN_IDs FUN_BODY IDs FUN_NAME TEST_EXP THAN_EXP ELSE_EXP 
-%type<ival>  EXPs EXPs_P EXPs_M EXPs_E PLUS MINUS MULTIPLY DIVIDE MODULUS GREATER SMALLER EQUAL
+%type<ival> PLUS MINUS MULTIPLY DIVIDE MODULUS GREATER SMALLER EQUAL
 %type<strval> VARIABLE 
+%type<op> EXPs
 %%
 //grammar section
 PROGRAM: STMTS {}
@@ -44,9 +52,22 @@ PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); }
                                  }   
          
 
-EXPs: EXP EXPs { $$ = $2; }
-    | EXP { $$ = $1; }
-
+EXPs: EXP EXPs { 
+                    $$.add_op = $1 + $2.add_op;
+                    $$.mul_op = $1 * $2.mul_op;
+                    if($1 == $2.val){
+                        $$.val = $1;
+                    }
+                    else{
+                        $$.and_op = 0;
+                        not_equal  = 1;
+                    }
+               }
+    | EXP { 
+             $$.val = $1;
+             $$.add_op = $1;
+             $$.mul_op = $1;
+          }
 
 EXP:  bool { $$ = $1; }
     | number { $$ = $1; }
@@ -67,15 +88,11 @@ NUMOP: PLUS {}
      | SMALLER {}
      | EQUAL {}
 
-PLUS:     '(' '+' EXP EXPs_P ')' { $$ = $3 + $4; }
-MINUS:    '(' '-' EXP EXPs ')' { $$ = $3 - $4; }
-MULTIPLY: '(' '*' EXP EXPs_M ')' { $$ = $3 * $4; }
-DIVIDE:   '(' '/' EXP EXPs ')' { $$ = $3 / $4; }
+PLUS:     '(' '+' EXP EXPs ')' { $$ = $3 + $4.add_op; printf("In add op $$: %d\n$4 add_op: %d\n", $$, $4.add_op); }
+MINUS:    '(' '-' EXP EXP ')' { $$ = $3 - $4; printf("$3: %d\n$4: %d\n", $3, $4); }
+MULTIPLY: '(' '*' EXP EXPs ')' { $$ = $3 * $4.mul_op; }
+DIVIDE:   '(' '/' EXP EXP ')' { $$ = $3 / $4; }
 
-EXPs_P: EXP EXPs_P { $$ = $1 + $2;}
-      | EXP { $$ = $1;}
-EXPs_M: EXP EXPs_M { $$ = $1 * $2;}
-      | EXP { $$ = $1;}
 
 MODULUS:  '(' mod EXP EXP ')'  { $$ = $3 % $4; }
 GREATER:  '(' '>' EXP EXP ')' { 
@@ -94,36 +111,45 @@ SMALLER:  '(' '<' EXP EXP ')' {
                                         $$ = 0;
                                     }
                                }
-EQUAL:    '(' '=' EXP EXPs_E ')' {
+EQUAL:    '(' '=' EXP EXPs ')' {
                                     if(not_equal){
                                         $$ = 0;
                                         not_equal = 0;
                                     }
-                                    else if($3 == $4){
+                                    else if($3 == $4.val){
                                         $$ = 1;
                                     }
                                     else{
                                         $$ = 0;
                                     }
                                }
-EXPs_E: EXP EXPs_M { 
-                        if($1 == $2){
-                            $$ = $1;
-                        }
-                        else{
-                            not_equal  = 1;
-                        } 
-                   }
-      | EXP { $$ = $1; }
-LOGICALOP: ANDOP {}
-        |  OROP {}
-        |  NOTOP {}
 
-ANDOP: '(' and EXP EXPs ')' {}
+LOGICALOP: ANDOP { $$ = $1; }
+        |  OROP { $$ = $1; }
+        |  NOTOP { $$ = $1; }
+
+ANDOP: '(' and EXP EXPs ')' {
+                                 if($4.and_op == 0){
+                                     $$ = 0;
+                                 }
+                                 else if($3 == 1 && $4.val == 1){
+                                     $$ = 1;
+                                 }
+                                 else{
+                                     $$ = 0;
+                                 }
+                            }
      
 OROP:  '(' or  EXP EXPs ')' {}
     
-NOTOP: '(' not EXP ')' {}
+NOTOP: '(' not EXP ')' { 
+                            if($3 == 0){
+                                $$ = 1;
+                            }
+                            else{
+                                $$ = 0;
+                            }
+                       }
      
 DEFSTMT: '(' def VARIABLE EXP ')' {}
        ;
