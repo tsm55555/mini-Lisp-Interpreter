@@ -28,7 +28,7 @@ id	{letter}({letter}|{digit}|-)*
 "define" {return def;}
 "fun"	 {return fun;}
 "if"	 {return IF;}
-{id}	 {return ID;}
+{id}	 {yylval.strval = strdup(yytext); return ID;}
 {bool}    	{   
 			if(strcmp( yytext, "#t") == 0){
 				yylval.ival=1;

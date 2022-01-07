@@ -32,6 +32,11 @@ $(exec): $(scanner_o) $(parser_o)
 	-clear 
 clean:
 	-rm ./testcase/output/*
+	-rm $(parser_c)
+	-rm $(scanner_c)
+	-rm $(parser_h)
+	-rm $(parser_o)
+	-rm $(scanner_o)
 	-clear
 
 test: $(test_data)

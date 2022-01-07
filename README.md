@@ -8,7 +8,7 @@
 - [X] Numerical Operations
 - [X] Logical Operators
 - [X] If Expression
-- [ ] Variable Defination
+- [X] Variable Defination
 - [ ] Function
 - [ ] Named Function
 

@@ -11,7 +11,8 @@ int yyparse();
 using namespace std;
 void yyerror(const char* message);
 int not_equal = 0;
-map<string, string> my_variable;
+int is_variable = 0;
+map<string, int> my_variable;
 %}
 %union {
     int ival;
@@ -75,15 +76,15 @@ EXPs: EXP EXPs {
                     }
                }
     | EXP { 
-             $$.and_op = 1;
              $$.val = $1;
              $$.add_op = $1;
              $$.mul_op = $1;
+             $$.and_op = 1;
           }
 
 EXP:  BOOL { $$ = $1; }
     | number { $$ = $1; }
-    | VARIABLE {}
+    | VARIABLE { $$ = my_variable[$1]; }
     | NUMOP { $$ = $1; }
     | LOGICALOP { $$ = $1; }
     | FUN_EXP { $$ = $1; }
@@ -170,8 +171,10 @@ NOTOP: '(' NOT EXP ')' {
                             }
                        }
      
-DEFSTMT: '(' def VARIABLE EXP ')' {}
-       ;
+DEFSTMT: '(' def VARIABLE EXP ')' {
+                                       my_variable[$3] = $4;
+                                       printf("define %s as %d\n", $3, my_variable[$3]);
+                                  } 
 
 VARIABLE: ID { $$ = $1; }
         
