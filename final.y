@@ -46,7 +46,7 @@ STMT: EXP {}
     | PRINTSTMT {}
     ;
 
-PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); cout << "test" << endl; }
+PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); }
          | '(' printbool EXP ')' { 
                                      if($3){
                                         printf("#t\n"); 
@@ -192,7 +192,6 @@ FUN_NAME: ID {}
         ;
 
 IF_EXP: '(' IF TEST_EXP THAN_EXP ELSE_EXP ')' {
-                                                    cout << "test" << endl;
                                                     if($3){
                                                         $$ = $4;
                                                     }

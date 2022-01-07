@@ -9,8 +9,8 @@ lex := final.l
 scanner_c := final.yy.cc
 scanner_o := final.yy.o
 
-exec := final
-test_data = ./testcase/test_data
+exec := ./final
+test_data = ./testcase/test_data/*.lsp
 
 all: $(exec)
 
@@ -31,24 +31,9 @@ $(exec): $(scanner_o) $(parser_o)
 	-rm $(scanner_o)
 
 clean:
-	-rm $(exec)
 	-rm ./testcase/output/*
 
-test: $(exec)
-	./final < ./testcase/test_data/01_1.lsp > ./testcase/output/01_1.out
-	./final < ./testcase/test_data/01_2.lsp > ./testcase/output/01_2.out
-	./final < ./testcase/test_data/02_1.lsp > ./testcase/output/02_1.out
-	./final < ./testcase/test_data/02_2.lsp > ./testcase/output/02_2.out
-	./final < ./testcase/test_data/03_1.lsp > ./testcase/output/03_1.out
-	./final < ./testcase/test_data/03_2.lsp > ./testcase/output/03_2.out
-	./final < ./testcase/test_data/04_1.lsp > ./testcase/output/04_1.out
-	./final < ./testcase/test_data/04_2.lsp > ./testcase/output/04_2.out
-	./final < ./testcase/test_data/05_1.lsp > ./testcase/output/05_1.out
-	./final < ./testcase/test_data/05_2.lsp > ./testcase/output/05_2.out
-	./final < ./testcase/test_data/06_1.lsp > ./testcase/output/06_1.out
-	./final < ./testcase/test_data/06_2.lsp > ./testcase/output/06_2.out
-	./final < ./testcase/test_data/07_1.lsp > ./testcase/output/07_1.out
-	./final < ./testcase/test_data/07_2.lsp > ./testcase/output/07_2.out
-	./final < ./testcase/test_data/08_1.lsp > ./testcase/output/08_1.out
-	./final < ./testcase/test_data/08_2.lsp > ./testcase/output/08_2.out
+test: $(test_data)
+	@for f in $(test_data); do ./final < $${f} > $${f}.out; done
+	-mv ./testcase/test_data/*.out ./testcase/output/
 	
