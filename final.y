@@ -70,17 +70,13 @@ EXPs: EXP EXPs {
                     }
                     else{
                         $$.and_op = 0;
-                        //cout << "change" << endl;
                         not_equal  = 1;
                     }
 
                     if($1 == 1 || $2.val == 1) {
-                        //cout << $2.val << endl;
                         $$.or_op = 1;
                     }
                     else{
-                        //cout << "in F" << endl << $2.val << endl;
-                        //cout << "in or F" << endl;
                         $$.or_op = 0;
                     }
                }
