@@ -173,10 +173,25 @@ NOTOP: '(' NOT EXP ')' {
      
 DEFSTMT: '(' def VARIABLE EXP ')' {
                                        my_variable[$3] = $4;
-                                       printf("define %s as %d\n", $3, my_variable[$3]);
+                                       //printf("define %s as %d\n", $3, my_variable[$3]);
                                   } 
 
 VARIABLE: ID { $$ = $1; }
+        
+IF_EXP: '(' IF TEST_EXP THAN_EXP ELSE_EXP ')' {
+                                                    if($3){
+                                                        $$ = $4;
+                                                    }
+                                                    else{
+                                                        $$ = $5;
+                                                    }
+                                              }
+TEST_EXP: EXP { $$ = $1 ;}
+        ;
+THAN_EXP: EXP { $$ = $1 ;}
+        ;
+ELSE_EXP: EXP { $$ = $1 ;}
+        ;
         
 FUN_EXP: '(' fun FUN_IDs FUN_BODY ')' {}
        
@@ -198,20 +213,6 @@ PARAMETERS: EXP {}
 FUN_NAME: ID {}
         ;
 
-IF_EXP: '(' IF TEST_EXP THAN_EXP ELSE_EXP ')' {
-                                                    if($3){
-                                                        $$ = $4;
-                                                    }
-                                                    else{
-                                                        $$ = $5;
-                                                    }
-                                              }
-TEST_EXP: EXP { $$ = $1 ;}
-        ;
-THAN_EXP: EXP { $$ = $1 ;}
-        ;
-ELSE_EXP: EXP { $$ = $1 ;}
-        ;
 %%
     
 void yyerror(const char* message) {

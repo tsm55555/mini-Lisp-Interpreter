@@ -11,6 +11,8 @@ scanner_o := final.yy.o
 
 exec := ./final
 test_data = ./testcase/test_data/*.lsp
+hidden_test_data = ./testcase/hidden1/*.lsp
+hidden_test_data2 = ./testcase/hidden2/*.lsp
 
 all: $(exec)
 
@@ -39,7 +41,9 @@ clean:
 	-rm $(scanner_o)
 	-clear
 
-test: $(test_data)
+test: $(test_data) $(hidden_test_data) $(hidden_test_data2)
 	@for f in $(test_data); do ./final < $${f} > $${f}.out; done
+	#@for f in $(hidden_test_data); do ./final < $${f} > $${f}.out; done
 	-mv ./testcase/test_data/*.out ./testcase/output/
-	
+	#-mv ./testcase/hidden1/*.out ./testcase/output/
+	-clear
