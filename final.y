@@ -6,10 +6,12 @@ int yyparse();
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
+#include <map>
 using namespace std;
 void yyerror(const char* message);
 int not_equal = 0;
+map<string, string> my_variable;
 %}
 %union {
     int ival;
