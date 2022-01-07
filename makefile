@@ -29,9 +29,10 @@ $(exec): $(scanner_o) $(parser_o)
 	-rm $(parser_h)
 	-rm $(parser_o)
 	-rm $(scanner_o)
-
+	-clear 
 clean:
 	-rm ./testcase/output/*
+	-clear
 
 test: $(test_data)
 	@for f in $(test_data); do ./final < $${f} > $${f}.out; done

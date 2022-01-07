@@ -60,6 +60,7 @@ PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); }
 EXPs: EXP EXPs { 
                     $$.add_op = $1 + $2.add_op;
                     $$.mul_op = $1 * $2.mul_op;
+                    $$.and_op = 1;
                     if($1 == $2.val){
                         $$.val = $1;
                     }
@@ -72,6 +73,7 @@ EXPs: EXP EXPs {
                     }
                }
     | EXP { 
+             $$.and_op = 1;
              $$.val = $1;
              $$.add_op = $1;
              $$.mul_op = $1;
