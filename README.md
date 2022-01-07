@@ -1,6 +1,7 @@
 # mini-Lisp-Interpreter
 
-
+i write bad code
+pain
 ## Feature
 ### Basic
 - [X] Syntax Validation
