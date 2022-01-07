@@ -26,7 +26,7 @@ id	{letter}({letter}|{digit}|-)*
 "or"	 {return OR;}
 "not"	 {return NOT;}
 "define" {return def;}
-"lambda"	 {return fun;}
+"lambda"|"fun"	 {return fun;}
 "if"	 {return IF;}
 {id}	 {yylval.strval = strdup(yytext); return ID;}
 {bool}    	{   

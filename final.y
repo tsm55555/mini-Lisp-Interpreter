@@ -217,7 +217,7 @@ NOTOP: '(' NOT EXP ')' {
 DEFSTMT: '(' def VARIABLE EXP ')' {
                                        if ( my_variable.find($3) == my_variable.end() ) {
                                             my_variable[$3] = $4.val;
-                                            printf("define %s as %d\n", $3, my_variable[$3]);
+                                            //printf("define %s as %d\n", $3, my_variable[$3]);
                                         } 
                                         else {
                                             cout << "Redefining is not allowed" << endl;
