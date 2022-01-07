@@ -34,16 +34,20 @@ $(exec): $(scanner_o) $(parser_o)
 	-clear 
 clean:
 	-rm ./testcase/output/*
+	-rm ./testcase/hidden1/*.out
+	-rm ./testcase/hidden2/*.out
 	-rm $(parser_c)
 	-rm $(scanner_c)
 	-rm $(parser_h)
 	-rm $(parser_o)
 	-rm $(scanner_o)
+	-rm $(exec)
 	-clear
 
 test: $(test_data) $(hidden_test_data) $(hidden_test_data2)
 	@for f in $(test_data); do ./final < $${f} > $${f}.out; done
-	#@for f in $(hidden_test_data); do ./final < $${f} > $${f}.out; done
+	@for f in $(hidden_test_data); do ./final < $${f} > $${f}.out; done
+	@for f in $(hidden_test_data2); do ./final < $${f} > $${f}.out; done
 	-mv ./testcase/test_data/*.out ./testcase/output/
 	#-mv ./testcase/hidden1/*.out ./testcase/output/
 	-clear

@@ -64,15 +64,24 @@ EXPs: EXP EXPs {
                     $$.add_op = $1 + $2.add_op;
                     $$.mul_op = $1 * $2.mul_op;
                     $$.and_op = 1;
+                    $$.val = $2.val;
                     if($1 == $2.val){
                         $$.val = $1;
                     }
                     else{
                         $$.and_op = 0;
+                        //cout << "change" << endl;
                         not_equal  = 1;
                     }
+
                     if($1 == 1 || $2.val == 1) {
+                        //cout << $2.val << endl;
                         $$.or_op = 1;
+                    }
+                    else{
+                        //cout << "in F" << endl << $2.val << endl;
+                        //cout << "in or F" << endl;
+                        $$.or_op = 0;
                     }
                }
     | EXP { 
@@ -80,6 +89,7 @@ EXPs: EXP EXPs {
              $$.add_op = $1;
              $$.mul_op = $1;
              $$.and_op = 1;
+             $$.or_op = $1;
           }
 
 EXP:  BOOL { $$ = $1; }
@@ -101,9 +111,9 @@ NUMOP: PLUS {}
      | SMALLER {}
      | EQUAL {}
 
-PLUS:     '(' '+' EXP EXPs ')' { $$ = $3 + $4.add_op;}
+PLUS:     '(' '+' EXP EXPs ')' { $$ = $3 + $4.add_op; not_equal=0;}
 MINUS:    '(' '-' EXP EXP ')' { $$ = $3 - $4; }
-MULTIPLY: '(' '*' EXP EXPs ')' { $$ = $3 * $4.mul_op; }
+MULTIPLY: '(' '*' EXP EXPs ')' { $$ = $3 * $4.mul_op; not_equal=0;}
 DIVIDE:   '(' '/' EXP EXP ')' { $$ = $3 / $4; }
 
 
@@ -151,6 +161,7 @@ ANDOP: '(' AND EXP EXPs ')' {
                                  else{
                                      $$ = 0;
                                  }
+                                 not_equal=0;
                             }
      
 OROP:  '(' OR  EXP EXPs ')' {
@@ -160,6 +171,7 @@ OROP:  '(' OR  EXP EXPs ')' {
                                  else{
                                      $$ = 0;
                                  }
+                                 not_equal=0;
                             }
     
 NOTOP: '(' NOT EXP ')' { 

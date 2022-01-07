@@ -40,7 +40,6 @@ id	{letter}({letter}|{digit}|-)*
 {number} {yylval.ival = atoi(yytext); return number;}
 "("|")"	 {return yytext[0];}
 \t {}
-\n {}
 \r {}
 .|\n	 {}
 %%
