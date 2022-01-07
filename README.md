@@ -9,6 +9,7 @@
 - [X] Logical Operators
 - [X] If Expression
 - [X] Variable Defination
+------------give up---------------
 - [ ] Function
 - [ ] Named Function
 

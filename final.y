@@ -147,7 +147,7 @@ MODULUS:  '(' mod EXP EXP ')'  {
                                     } 
                                }
 
-GREATER:  '(' '>' EXP EXP ')' { 
+GREATER:  '(' '>' EXP EXP ')'  { 
                                     if($3.val > $4.val){
                                         $$ = 1; 
                                     }
@@ -155,7 +155,8 @@ GREATER:  '(' '>' EXP EXP ')' {
                                         $$ = 0;
                                     }
                                }
-SMALLER:  '(' '<' EXP EXP ')' {
+
+SMALLER:  '(' '<' EXP EXP ')'  {
                                     if($3.val < $4.val){
                                         $$ = 1;
                                     }
@@ -163,6 +164,7 @@ SMALLER:  '(' '<' EXP EXP ')' {
                                         $$ = 0;
                                     }
                                }
+
 EQUAL:    '(' '=' EXP EXPs ')' {
                                     if(not_equal){
                                         $$ = 0;
@@ -177,7 +179,7 @@ EQUAL:    '(' '=' EXP EXPs ')' {
                                }
 
 LOGICALOP: ANDOP { $$ = $1; }
-        |  OROP { $$ = $1; }
+        |  OROP  { $$ = $1; }
         |  NOTOP { $$ = $1; }
 
 ANDOP: '(' AND EXP EXPs ')' {
