@@ -1,6 +1,9 @@
 %option noyywrap
 %{
-#include "final.tab.h"
+extern "C" {
+int yylex();
+}
+#include "final.tab.hh"
 #include <stdio.h>
 %}
 digit	[0-9]
@@ -19,9 +22,9 @@ id	{letter}({letter}|{digit}|-)*
 ">"	     {return '>';}
 "<"	     {return '<';}
 "="	     {return '=';}
-"and"	 {return and;}
-"or"	 {return or;}
-"not"	 {return not;}
+"and"	 {return AND;}
+"or"	 {return OR;}
+"not"	 {return NOT;}
 "define" {return def;}
 "fun"	 {return fun;}
 "if"	 {return IF;}
@@ -33,7 +36,7 @@ id	{letter}({letter}|{digit}|-)*
 			else{
 				yylval.ival=0;
             }
-			return bool;}
+			return BOOL;}
 {number} {yylval.ival = atoi(yytext); return number;}
 "("|")"	 {return yytext[0];}
 \t {}

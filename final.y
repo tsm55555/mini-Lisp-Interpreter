@@ -1,8 +1,13 @@
 %{
+extern "C" {
+int yylex();
+int yyparse();
+}
 #include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <string.h>
-int yylex();
+using namespace std;
 void yyerror(const char* message);
 int not_equal = 0;
 %}
@@ -18,9 +23,9 @@ int not_equal = 0;
     }op;    
 }
 
-%token  printnum printbool '+' '-' '*' '/' '>' '<' '=' mod and or not def IF fun 
+%token  printnum printbool '+' '-' '*' '/' '>' '<' '=' mod AND OR NOT def IF fun 
 %token <strval> ID
-%token <ival> number bool
+%token <ival> number BOOL
 %type<ival> STMTS STMT EXP DEFSTMT PRINTSTMT NUMOP LOGICALOP ANDOP OROP NOTOP FUN_EXP FUN_CALL IF_EXP
 %type<ival> FUN_IDs FUN_BODY IDs FUN_NAME TEST_EXP THAN_EXP ELSE_EXP 
 %type<ival> PLUS MINUS MULTIPLY DIVIDE MODULUS GREATER SMALLER EQUAL
@@ -41,7 +46,7 @@ STMT: EXP {}
     | PRINTSTMT {}
     ;
 
-PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); }
+PRINTSTMT: '(' printnum  EXP ')' { printf("%d\n", $3); cout << "test" << endl; }
          | '(' printbool EXP ')' { 
                                      if($3){
                                         printf("#t\n"); 
@@ -62,6 +67,9 @@ EXPs: EXP EXPs {
                         $$.and_op = 0;
                         not_equal  = 1;
                     }
+                    if($1 == 1 || $2.val == 1) {
+                        $$.or_op = 1;
+                    }
                }
     | EXP { 
              $$.val = $1;
@@ -69,7 +77,7 @@ EXPs: EXP EXPs {
              $$.mul_op = $1;
           }
 
-EXP:  bool { $$ = $1; }
+EXP:  BOOL { $$ = $1; }
     | number { $$ = $1; }
     | VARIABLE {}
     | NUMOP { $$ = $1; }
@@ -88,8 +96,8 @@ NUMOP: PLUS {}
      | SMALLER {}
      | EQUAL {}
 
-PLUS:     '(' '+' EXP EXPs ')' { $$ = $3 + $4.add_op; printf("In add op $$: %d\n$4 add_op: %d\n", $$, $4.add_op); }
-MINUS:    '(' '-' EXP EXP ')' { $$ = $3 - $4; printf("$3: %d\n$4: %d\n", $3, $4); }
+PLUS:     '(' '+' EXP EXPs ')' { $$ = $3 + $4.add_op;}
+MINUS:    '(' '-' EXP EXP ')' { $$ = $3 - $4; }
 MULTIPLY: '(' '*' EXP EXPs ')' { $$ = $3 * $4.mul_op; }
 DIVIDE:   '(' '/' EXP EXP ')' { $$ = $3 / $4; }
 
@@ -128,7 +136,7 @@ LOGICALOP: ANDOP { $$ = $1; }
         |  OROP { $$ = $1; }
         |  NOTOP { $$ = $1; }
 
-ANDOP: '(' and EXP EXPs ')' {
+ANDOP: '(' AND EXP EXPs ')' {
                                  if($4.and_op == 0){
                                      $$ = 0;
                                  }
@@ -140,9 +148,16 @@ ANDOP: '(' and EXP EXPs ')' {
                                  }
                             }
      
-OROP:  '(' or  EXP EXPs ')' {}
+OROP:  '(' OR  EXP EXPs ')' {
+                                 if($3 == 1 || $4.or_op == 1){
+                                     $$ = 1;
+                                 }
+                                 else{
+                                     $$ = 0;
+                                 }
+                            }
     
-NOTOP: '(' not EXP ')' { 
+NOTOP: '(' NOT EXP ')' { 
                             if($3 == 0){
                                 $$ = 1;
                             }
@@ -176,8 +191,15 @@ PARAMETERS: EXP {}
 FUN_NAME: ID {}
         ;
 
-IF_EXP: '(' IF TEST_EXP THAN_EXP ELSE_EXP ')' {}
-      ;
+IF_EXP: '(' IF TEST_EXP THAN_EXP ELSE_EXP ')' {
+                                                    cout << "test" << endl;
+                                                    if($3){
+                                                        $$ = $4;
+                                                    }
+                                                    else{
+                                                        $$ = $5;
+                                                    }
+                                              }
 TEST_EXP: EXP { $$ = $1 ;}
         ;
 THAN_EXP: EXP { $$ = $1 ;}
@@ -190,7 +212,7 @@ void yyerror(const char* message) {
     printf("syntax error\n");
 }
 
-int main(int argc, char *argv[]) {
+int main() {
         yyparse();
         return(0);
 }

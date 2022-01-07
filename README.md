@@ -6,7 +6,7 @@
 - [X] Syntax Validation
 - [X] Print
 - [X] Numerical Operations
-- [ ] Logical Operators
+- [X] Logical Operators
 - [ ] Variable Defination
 - [ ] Function
 - [ ] Named Function
