@@ -235,14 +235,14 @@ IF_EXP: '(' IF TEST_EXP THAN_EXP ELSE_EXP ')' {
                                                         $$ = $5;
                                                     }
                                               }
-TEST_EXP: EXP { $$ = $1.val ;}
+TEST_EXP: EXP { $$ = $1.val; }
         ;
-THAN_EXP: EXP { $$ = $1.val ;}
+THAN_EXP: EXP { $$ = $1.val; }
         ;
-ELSE_EXP: EXP { $$ = $1.val ;}
+ELSE_EXP: EXP { $$ = $1.val; }
         ;
         
-FUN_EXP: '(' fun FUN_IDs FUN_BODY ')' {}
+FUN_EXP: '(' fun FUN_IDs FUN_BODY ')' { cout << "function opertaion is not allowed" << endl; return 0; }
        
 
 FUN_IDs: '(' IDs ')' {}

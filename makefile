@@ -33,7 +33,7 @@ $(exec): $(scanner_o) $(parser_o)
 	-rm $(scanner_o)
 	-clear 
 clean:
-	#-rm ./testcase/output/*
+	-rm ./testcase/output/*
 	#-rm ./testcase/test_data/*.out
 	#-rm ./testcase/hidden1/*.out
 	#-rm ./testcase/hidden2/*.out
